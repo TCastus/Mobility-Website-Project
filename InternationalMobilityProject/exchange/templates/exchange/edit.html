@@ -1,0 +1,39 @@
+{% extends 'exchange/base.html' %}
+{% load static %}
+
+{% block style %}
+{% endblock style %}
+
+{% block head %}
+    <title>Ajouter une info - Université</title>
+{% endblock head %}
+
+{% block intro %}
+    <div id="intro" style="min-height: 0vh;">
+        <ul class="actions">
+            <li><a href="#nav" class="button icon solo fa-arrow-down scrolly">Continue</a></li>
+        </ul>
+    </div>
+{% endblock intro %}
+
+{% block main %}
+    <header class="major">
+        <h1>Ajouter<br />
+        une info</h1>
+        <p>Donne ton avis sur ton échange à l'étranger</p>
+    </header>
+
+    <div class="table-wrapper">
+        <header>
+            <h3>Informations personnelles</h3>
+        </header>
+        <form action="{% url 'edit' Uni.ID %}" method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input type="submit" value="Continuer">
+        </form>
+    </div>
+{% endblock main %}
+
+{% block scripts %}
+{% endblock scripts %}

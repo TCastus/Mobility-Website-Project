@@ -1,0 +1,219 @@
+{% extends 'exchange/base.html' %}
+{% load static %}
+
+{% block style %}
+#map {
+width: 100%;
+height: 600px;
+}
+{% endblock style %}
+
+{% block head %}
+<title>ASTUS - Echange International</title>
+<link rel="stylesheet" type="text/css" href="{% static 'exchange/assets/css/MarkerCluster.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'exchange/assets/css/MarkerCluster.Default.css' %}" />
+<link rel="stylesheet" href="{% static 'leaflet/leaflet.css'%}" />
+<script src="{% static 'leaflet/leaflet.js' %}" ></script>
+<!--<script type='text/javascript' src="{% static 'exchange/assets/js/jquery2.min.js' %}"></script>-->
+<script type='text/javascript' src="{% static 'exchange/assets/js/leaflet.markercluster.js' %}"></script>
+{% endblock head %}
+
+{% block intro %}
+<div id="intro" style="min-height: 0vh;">
+    <h1>échange<br />
+        Universitaire</h1>
+    <p>"Le plus beau voyage, c'est celui qu'on n'a pas encore fait" ~ Anonyme</p>
+    <ul class="actions">
+        <li><a href="#nav" class="button icon solo fa-arrow-down scrolly">Continue</a></li>
+    </ul>
+</div>
+{% endblock intro %}
+
+{% block main %}
+<header class="major">
+    <h2>Carte interactive</h2>
+</header>
+
+<div id="map" height="20rem">
+
+</div>
+
+<div>
+    <p style="text-align:center;">
+        <img src="{% static 'exchange/images/attention.png' %}" width="25" height="25">
+        La majorité des informations de ce site sont basées sur les avis/expériences des élèves partis en échange les
+        années précédentes. Elles peuvent changer d'une année à l'autre, donc n'hésitez pas à chercher des informations
+        en plus ! Ce site sert principalement à vous aider pour vous faire une première idée quant à votre échange
+        universitaire.
+        <img src="{% static 'exchange/images/attention.png' %}" width="25" height="25">
+    </p>
+</div>
+
+{% endblock main %}
+
+{% block scripts %}
+// INITIALISATION
+
+// universités + coordonées + metriques / par continent
+var universiteParContinent = [];
+var universiteAS = [];
+var universiteAF = [];
+var universiteAdN = [];
+var universiteAdS = [];
+var universiteEU = [];
+var universiteOC = [];
+
+// On met les infos dans chaques tableau
+{% for o in Univ_list %}
+{% if o.City.Country.Continent == 'AS' %}
+universiteAS.push(
+["{{o.Name}}",parseFloat("{{o.Lat}}".replace(',','.')),parseFloat("{{o.Long}}".replace(',','.')),"{{o.RankMetric}}","{{o.LifeMetric}}",parseInt("{{o.ID}}")]
+)
+{% elif o.City.Country.Continent == 'AF' %}
+universiteAF.push(
+["{{o.Name}}",parseFloat("{{o.Lat}}".replace(',','.')),parseFloat("{{o.Long}}".replace(',','.')),"{{o.RankMetric}}","{{o.LifeMetric}}",parseInt("{{o.ID}}")]
+)
+{% elif o.City.Country.Continent == 'AdN' %}
+universiteAdN.push(
+["{{o.Name}}",parseFloat("{{o.Lat}}".replace(',','.')),parseFloat("{{o.Long}}".replace(',','.')),"{{o.RankMetric}}","{{o.LifeMetric}}",parseInt("{{o.ID}}")]
+)
+{% elif o.City.Country.Continent == 'AdS' %}
+universiteAdS.push(
+["{{o.Name}}",parseFloat("{{o.Lat}}".replace(',','.')),parseFloat("{{o.Long}}".replace(',','.')),"{{o.RankMetric}}","{{o.LifeMetric}}",parseInt("{{o.ID}}")]
+)
+{% elif o.City.Country.Continent == 'EU' %}
+universiteEU.push(
+["{{o.Name}}",parseFloat("{{o.Lat}}".replace(',','.')),parseFloat("{{o.Long}}".replace(',','.')),"{{o.RankMetric}}","{{o.LifeMetric}}",parseInt("{{o.ID}}")]
+)
+{% elif o.City.Country.Continent == 'OC' %}
+universiteOC.push(
+["{{o.Name}}",parseFloat("{{o.Lat}}".replace(',','.')),parseFloat("{{o.Long}}".replace(',','.')),"{{o.RankMetric}}","{{o.LifeMetric}}",parseInt("{{o.ID}}")]
+)
+{% endif %}
+{% endfor %}
+
+//on rassemble tout les tableaux dans un seul
+universiteParContinent.push(universiteAS,universiteAF,universiteAdN,universiteAdS,universiteEU,universiteOC)
+
+// LA CARTE
+// initialize the map object, passing it the id of the div where we want the map to go
+var map = L.map("map").setView([0, 0], 2);
+
+//Creer un 'tile layer' contenant la carte
+var tiles = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    minZoom: 2,
+    maxZoom: 18,
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Points &copy 2012 LINZ'
+}).addTo(map);
+
+// add this tile layer to the map we just created
+map.addLayer(tiles);
+
+//METTRE LES MARKERS SUR CARTE
+for(var j=0; j<universiteParContinent.length; j++){ 
+    var markers=new L.MarkerClusterGroup({ 
+        showCoverageOnHover: false,
+    }); 
+    universities=universiteParContinent[j]; 
+    for (var i=0; i < universities.length; i++) { 
+        var a=universities[i]; 
+        var title=a[0]; 
+        var marker=L.marker(new L.LatLng(a[1], a[2]), { title: title }); 
+
+        var rank=parseFloat(a[3].replace(/(\d),(?=\d)/g, '$1.' )); 
+        if (rank !=-1) { 
+            rank=Math.ceil(rank*2)/2; 
+        } 
+
+        var life=parseFloat(a[4].replace(/(\d),(?=\d)/g, '$1.' )); 
+        if (life !=-1) { 
+            life=Math.ceil(life*2)/2; 
+        } 
+
+        var imageRank=""; // Choix image pour Ranking 
+        var imageLife="" ; // Choix image pour Qualité de Vie 
+        
+        switch(rank){ 
+            case 0.5:
+                imageRank='<img src="{% static 'exchange/images/HalfStarVotedRed.png' %}" style="height:12px;width:60px;"></img>' ;
+                break; 
+            case 1:
+                imageRank='<img src="{% static 'exchange/images/OneStarVotedRed.png' %}" style="height:12px;width:60px;"></img>' ;
+                break; 
+            case 1.5:
+                imageRank='<img src="{% static 'exchange/images/OneHalfStarVotedRed.png' %}" style="height:12px;width:60px;"></img>';
+                break; 
+            case 2:
+                imageRank='<img src="{% static 'exchange/images/TwoStarVotedOrange.png' %}" style="height:12px;width:60px;"></img>'; 
+                break; 
+            case 2.5:
+                imageRank='<img src="{% static 'exchange/images/TwoHalfStarVotedOrange.png' %}" style="height:12px;width:60px;"></img>';
+                break; 
+            case 3:
+                imageRank='<img src="{% static 'exchange/images/ThreeStarVotedOrange.png' %}" style="height:12px;width:60px;"></img>';
+                break; 
+            case 3.5:
+                imageRank='<img src="{% static 'exchange/images/ThreeHalfStarVotedGreen.png' %}" style="height:12px;width:60px;"></img>';
+                break; 
+            case 4:
+                imageRank='<img src="{% static 'exchange/images/FourStarVotedGreen.png' %}" style="height:12px;width:60px;"></img>';
+                break; 
+            case 4.5:
+                imageRank='<img src="{% static 'exchange/images/FourHalfStarVotedGreen.png' %}" style="height:12px;width:60px;"></img>';
+                break; 
+            case 5:
+                imageRank='<img src="{% static 'exchange/images/FiveStarVotedGreen.png' %}" style="height:12px;width:60px;"></img>';
+                break; 
+            default:
+                imageRank='<img src="{% static 'exchange/images/FiveStarNotVoted.png' %}" style="height:12px;width:60px;"></img>' ;
+                break; 
+        } 
+        switch(life){ 
+            case 0.5:
+                imageLife='<img src="{% static 'exchange/images/HalfStarVotedRed.png' %}" style="height:12px;width:60px;"></img>' ;
+                break; 
+            case 1:
+                imageLife='<img src="{% static 'exchange/images/OneStarVotedRed.png' %}" style="height:12px;width:60px;"></img>' ;
+                break; 
+            case 1.5:
+                imageLife='<img src="{% static 'exchange/images/OneHalfStarVotedRed.png' %}" style="height:12px;width:60px;"></img>';
+                break; 
+            case 2:
+                imageLife='<img src="{% static 'exchange/images/TwoStarVotedOrange.png' %}" style="height:12px;width:60px;"></img>';
+                break; 
+            case 2.5:
+                imageLife='<img src="{% static 'exchange/images/TwoHalfStarVotedOrange.png' %}" style="height:12px;width:60px;"></img>';
+                break; 
+            case 3:
+                imageLife='<img src="{% static 'exchange/images/ThreeStarVotedOrange.png' %}" style="height:12px;width:60px;"></img>';
+                break; 
+            case 3.5:
+                imageLife='<img src="{% static 'exchange/images/ThreeHalfStarVotedGreen.png' %}" style="height:12px;width:60px;"></img>';
+                break; 
+            case 4:
+                imageLife='<img src="{% static 'exchange/images/FourStarVotedGreen.png' %}" style="height:12px;width:60px;"></img>';
+                break; 
+            case 4.5:
+                imageLife='<img src="{% static 'exchange/images/FourHalfStarVotedGreen.png' %}" style="height:12px;width:60px;"></img>';
+                break; 
+            case 5:
+                imageLife='<img src="{% static 'exchange/images/FiveStarVotedGreen.png' %}" style="height:12px;width:60px;"></img>';
+                break; 
+            default:
+                imageLife='<img src="{% static 'exchange/images/FiveStarNotVoted.png' %}" style="height:12px;width:60px;"></img>' ;
+                break; 
+        }
+        
+        marker.bindPopup('<div style="text-align:center;">' +
+        '<span style="font-size:13px;margin:0;padding:0;">' + title + '</span><br />' +
+        '<span style="font-size:13px;margin:0;padding:0;">Ranking: </span>' + imageRank + '<br />' +
+        '<span style="font-size:13px;margin:0;padding:0;">Qualité de vie: </span>' + imageLife + '<br />' +
+        '<a href="/exchange/university/'+a[5]+'" style="font-size:13px;margin:0;padding:0;">Cliquez ici</a>' +
+        '</div>'); //quand on clique (metter info plus url avec href accolade)
+        
+        markers.addLayer(marker);
+    }
+    map.addLayer(markers);
+}
+
+{% endblock scripts %}
