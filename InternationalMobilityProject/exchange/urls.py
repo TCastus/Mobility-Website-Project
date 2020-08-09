@@ -22,5 +22,6 @@ urlpatterns = [
     path('rapport', views.rapport),
     path('base', views.base),
     path('user', views.user),
-    path('review', views.review)
+    path('review', views.review),
+    path('', views.index)
 ]

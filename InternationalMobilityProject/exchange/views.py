@@ -98,6 +98,8 @@ def home(request):
 
 	return render(request, 'exchange/home.html', locals())
 
+def index(request):
+	return redirect('/exchange/home')
 
 #-----------------------PAGE D'UNE UNIVERSITE (PAR ID)-----------------
 def university(request, idUni):
