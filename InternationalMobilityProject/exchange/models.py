@@ -158,7 +158,8 @@ class Exchange(models.Model):
         (5, '5TC'))
 
     SEMESTER_CHOICE = ((1, 'S1'),
-        (2, 'S2'))
+        (2, 'S2'),
+        (3, 'Année'))
 
     GRADE = ((1, '1'),
         (2, '2'),
