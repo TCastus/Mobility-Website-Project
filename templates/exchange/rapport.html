@@ -1,0 +1,127 @@
+{% extends 'exchange/base.html' %}
+{% load static %}
+
+{% block style %}
+    .accordion { 
+        /*il faut changer la hauteur des boutons, mais changer le paramètre "height" ça marche pas*/
+        background-color: #ffffff;
+        color: #444;
+        cursor: pointer;
+        width: 100%;
+        padding: 0 2rem;
+        border: none;
+        text-align: left;
+        outline: none;
+
+        transition: 0.2s;
+
+        font-size: 1.5rem;
+        height: 2rem;
+        line-height: 0rem;
+
+    }
+            
+    .active, .accordion:hover {
+        box-shadow: inset 0 0 0 2px #18bfef;
+        color: #18bfef !important;
+    }
+            
+    .panel {
+        padding: 0 2rem;
+        display: none;
+        background-color: white;
+        overflow: hidden;
+    }
+{% endblock style %}
+
+{% block head %}
+    <title>Rapport</title>
+{% endblock head %}
+
+{% block intro %}
+    <div id="intro" style="min-height: 0vh;">
+        <h1>Rapport Projet WEB</h1>
+        <ul class="actions">
+            <li><a class="button icon solo fa-arrow-down scrolly" href="#nav">Continue</a></li>
+        </ul>
+    </div>
+{% endblock intro %}
+
+{% block main %}
+    <div>
+        <h2>Présentation du projet</h2>
+        <p>Chaque élève de l’INSA doit effectuer au cours de sa scolarité un voyage d’au moins un semestre à l’étranger. Nous avons à l’INSA la chance d’avoir de nombreux accords avec de nombreuses universités dans le monde entier. Les élèves doivent chaque année faire un dur choix entre les différents pays et universités proposées. C’est ce que nous avons dû faire cette année pour certains d’entre nous. </p>
+        </br>
+        <p>Mais nous nous sommes rendus compte la difficulté de la tâche. En effet, il y a tellement de choix que faire le tri parmis toutes ces informations est compliqué. De plus, il serait utile de pouvoir contacter les élèves qui sont partis les années précédentes. Nous avons donc eu l’idée de réaliser un site qui regroupe toutes ces informations pour notre Projet WEB. Ce projet a donc pour but d’être un site “d’association” puisqu’il a été réalisé par des membres de l’Astus, l’association des élèves du département TC. Sur le long terme, le site pourrait être étendu aux autres départements de l’INSA Lyon.</p>
+        </br>
+        <p>L'interface a été réalisée de façon à avoir accès aux informations simplement et logiquement et pour que le site soit simple d'utilisation. Pour regrouper les informations nécessaires, nous avons envoyé un questionnaire aux élèves étant déjà partis en échange. Nous avons ensuite défini des métriques qui permettent aux utilisateurs du site de classer les universités selon leurs préférences.</p>
+        
+        <h3>Choix technologiques et méthodologiques</h3>
+        <h4>Formalisation des structures de données :</h4>
+        <p>Nous avons utilisé plusieurs tables agencées au mieux pour pouvoir se servir des différentes informations. Nous avons créé une base de données relationnelle et vérifié qu’elle est FNBC.</p>
+        <h4>Mise en place d’un back-end adapté au stockage des données :</h4>
+        <p>Nous avons utilisé MySQL puisque nous avions besoin d’une base de donnée structurée et qui est vérifiée. Elle doit supporter une quantité importante de données ayant des liens spécifiques entre elles. Le langage SQL sera donc utilisé.</p>
+        <h4>Utilisation d’un ORM :</h4>
+        <p>Le framework de Django inclut un framework servant d’interface entre notre backend et notre base de données MySQL, simulant une base de données orientée objet dans un fichier Models.py.</p>
+        <h4>Langage de programmation pour la génération dynamique des documents - Back-end :</h4>
+        <p>Le Back-End a été codé en Django soit un framework web dynamique Python ayant une grande communauté active sur internet, proposant ainsi des packages supplémentaires pouvant nous aider pour le projet. Notre code sera ainsi facilement lisible et repris par une autre personne.</p>
+        <h4>Interfaçage standard Front-end/Back-end  :</h4>
+        <p>Django n’utilise pas le modèle classique MVC mais un modèle MVT : Modèle Vue Template. C’est donc la Vue qui se met comme intermédiaire entre le Modèle et le Template (qui pourrait avoir des structures conditionnelles dedans). La majorité des rendus seront faits côté serveur.</p>
+        <h4>Langage de programmation pour l’adaptation dynamique des documents - Front-end :</h4>
+        <p>Nous avons utilisé du HTML pour le gabarit couplé avec un CSS (fichier pris sur <a href="https://html5up.net/massively">https://html5up.net/massively</a> : released for free under the Creative Commons license) et des librairies javascript pour une interaction dynamique entre le front end et l’utilisateur.</p>
+    </div>
+    <div>
+        <h2>Rendu Visuel</h2>
+        <p>Pour le front-end, nous avons décidé d’utiliser un template html dans le but d’avoir une interface esthétiquement agréable et facile à utiliser. </p>
+        <h4>Page d’accueil</h4>
+        <p>Sur cette page, il y a une carte du monde interactive. Elle contient la localisation de toutes les universités présentes dans la base de données, et les affiche à l’aide de marqueurs. Il est possible de zoomer et dézoomer sur cette carte. Lorsque l’on passe notre souris sur une certaine région du monde, cette dernière est mise en évidence et le nombre d’universités présentes dans cette région est affiché. Si on clique sur la région, un zoom se fait automatiquement sur cette dernière, et on peut donc regarder plus en détails les différentes universités. Si on clique sur une université, on se retrouve sur la page de l’université concernée dans notre site. </p>
+        <p>C’est un rendu côté serveur qui permet l’affichage de la carte, les informations sur celle-ci provenant de notre base de données. Dans le front-end nous avons fait appel à la librairie Leaflet en Javascript pour coder la carte. Cette librairie nous permet de charger une carte du monde et de mettre des marqueurs dessus selon les coordonnées fournies en arguments. Afin de rendre cette carte plus lisible nous avons aussi fait appel à la librairie ClusterMarker qui permet de regrouper les points dans un nuage, qui s’éclate plus on zoom dessus.</p>
+        <p>Depuis la page d’accueil, on peut aussi accéder facilement à deux autres onglets : Recherche avancée et Ajouter une info.</p>
+        
+        <h4>Recherche avancée</h4>
+        <p>	Cette page contient différents champs pouvant être remplis par l’utilisateur, afin de rechercher des universités avec des filtres plus précis (Continent, pays, type de contrat avec l’INSA) ainsi que définir l’ordre dans lequel ils apparaissent (ordonner par pays/Ranking/Qualité de Vie). Lorsque l’on clique sur “Rechercher”, la liste des universités correspondant à ces filtres s’affiche, les queries correspondants se font du côté back-end bien sûr. 
+            </p>
+        <p>Depuis cette page, on peut aussi accéder facilement à deux autres onglets : Accueil et Ajouter une info.</p>
+        <h4>Ajouter une info</h4>
+        <p>Cette page permet à l’utilisateur de donner son avis sur son échange universitaire. Elle se fait en plusieurs pages. La première est un formulaire demandant les informations personnelles de l’utilisateur: une partie de ces infos seront remplies automatiquement avec les attributs de l’utilisateur. Ensuite la deuxième page demande demande des renseignements par rapport aux langues parlés et certificats demandé par l’université, et le département dans lequel il est allé avec une note sur 5 sur la qualité des cours. La troisième demande des informations diverses sur l’échange de l’élève : la date de début/fin, semestre, année INSA, si il faut un visa et combien de temps ça leurs a prit, le loyer et les dépenses mensuelles et aussi nous demandons à l’élève de noter la qualité de vie sur place. La quatrième et dernière page demande à l’élève si il a eu des bourses pour partir, et le montant qui lui a été versé.</p>
+        <h4>Liste des universités</h4>
+        <p>Cette liste n’est accessible qu’après avoir cliqué sur “rechercher” depuis la page Recherche avancée. Elle s’affiche juste en dessous, avec le nombre d’éléments trouvés indiqué. Elle affiche une liste des universités correspondant aux filtres choisis. Pour chaque université, son nom est affiché, ainsi que deux métriques que nous avons choisi : l’excellence du département de l’université dans lequel l’échange sera effectué (une note sur 5), ainsi qu’une note sur 5 de qualité de vie, qui correspond à la moyenne entre 3 notes : une note de vie culturelle, une note de “vie nocturne”, et une note de sécurité (ces trois notes sont calculées à partir des avis donnés par les étudiants précédents. Si aucun étudiant n’a donné son avis, il n’y a donc pas de note). Le pays, la ville et la demande de l’Université sont aussi affichés. Lorsque l’on clique sur le nom d’une université, cela nous amène à la page de l’université.</p>
+        <h4>Page d'une université</h4>
+        <p>Cette liste n’est accessible qu’après avoir cliqué sur “rechercher” depuis la page Recherche avancée. Elle s’affiche juste en dessous, avec le nombre d’éléments trouvés indiqué. Elle affiche une liste des universités correspondant aux filtres choisis. Pour chaque université, son nom est affiché, ainsi que deux métriques que nous avons choisi : l’excellence du département de l’université dans lequel l’échange sera effectué (une note sur 5), ainsi qu’une note sur 5 de qualité de vie, qui correspond à la moyenne entre 3 notes : une note de vie culturelle, une note de “vie nocturne”, et une note de sécurité (ces trois notes sont calculées à partir des avis donnés par les étudiants précédents. Si aucun étudiant n’a donné son avis, il n’y a donc pas de note). Le pays, la ville et la demande de l’Université sont aussi affichés. Lorsque l’on clique sur le nom d’une université, cela nous amène à la page de l’université.</p>
+        <h4>Modification/ajout par enseignant</h4>
+        <p>Certaines informations sont trop officielles pour qu’elles soient modifiées/ajoutées par un élève. Ces informations telles que le nombre de places/demande et le ranking du département seront réservées aux enseignants. Elle est séparé en 2: en premier c’est une liste des départements de l’université avec l’option de modifier leurs attributs ainsi qu’un formulaire pour en rajouter une. En deuxième nous avons un formulaire pour modifier le nombre de place et de demande de l’université. 
+            </p>
+    </div>
+    <div>
+        <h2>Base de données</h2>
+        <ul>
+            <li><b>Country(CountryName</b>, ECTSConversion, Continent)</li>
+            <li><b>City(CityName</b>, <u>CountryName</u>)</li>
+            <li><b>University(ID</b>, Name, <u>City</u>, WebLink, Places, Demand, SplitableYear, Project)</li>
+            <li><b>UniversityContracts(ID</b>, ContractType, <u>UniversityID</u>)</li>
+            <li><b>UniversityLanguages(ID</b>, Language, LanguageDiploma, LanguageLevel, <u>UniversityID</u>)</li>
+            <li><b>Department(ID</b>, Name, <u>UniversityID</u>, Rank)</li>
+            <li><b>Student(Email</b>, Name, Surname, AccronymeDepartementINSA, Nationality)</li>
+            <li><b>FinancialAid(ID</b>, Name, Value, <u>ExchangeID</u>)</li>
+            <li><b>Exchange(ID</b>, Year(4TC/5TC), StartDate, EndDate, SemesterNumber, Visa, Comment, TimeVisa, Rent, MonthlyExpenses, NightLifeGrade, CulturalLifeGrade, Security, <u>StudentID</u>, <u>UniversityID</u>)</li>
+        </ul>
+    </div>
+    <div>
+        <h2>CAS / Login</h2>
+        <p>	Afin de s’assurer que seulement les personnes autorisées puissent rajouter de l’information sur notre site, nous avons utilisé le système d'authentification de l’INSA pour authentifier les utilisateurs. Pour cela nous avons fait appel à un projet django “Django-CAS-ng” qui est une implémentation de CAS client. Nous fournissons l’adresse URL du serveur CAS de l’INSA, ainsi quand un utilisateur souhaite se connecter nous le redirigeons vers l’application d’authentification de l’INSA, qui nous fournira un ticket donnant aussi des attributs liés à cet utilisateur (username, étudiant/enseignant...). En fonction de ces attributs nous pouvons donner à chaque type d’utilisateur (étudiant ou enseignant) des permissions différentes. En effet un enseignant pourra accéder à la modification d’informations supplémentaires alors qu’un simple étudiant ne peut pas via des liens qui seront visibles/invisibles et des pages qui seront protégées (avec un décorateur “@permission_required”). Cette version du site utilise un serveur CAS exemple vu que nous n’avons pas encore l’accès au CAS de l’INSA.</p>
+    </div>
+    <div>
+        <h2>Perspectives</h2>
+        <p>Notre pensons continuer à améliorer ce que nous avons fait et continuer à travailler dessus pour que cela soit vraiment util aux futurs étudiants voulant partir à l'étranger.
+                Premièrement, dans la base de données nous devons mieux trier les universités où les élèves de TC peuvent partir en échange. Nous devons aussi ajouter les liens et les départements correspondants à chaque université ainsi que le type de contrat, ainsi que des informations sur les bourses et les langues demandées. Il faudra aussi gérer les nouvelles informations données.
+                </p>
+        <p>Bien sûr il nous faudrait aussi l'accès au CAS de l’INSA pour améliorer notre site et pour pouvoir ensuite différencier étudiants et administrateurs. Cela nous permettrait de contrôler la modification des informations.</p>
+        <p>Nous pensons aussi rajouter un panier qui permettrait de sélectionner plusieurs universités et de les comparer. Nous voudrions aussi créer un espace étudiant où les universités préférées de l’étudiant seraient retenues.</p>
+        <p>Il nous faudrait aussi modifier les frontières des clusters et rajouter des filtres directement sur la carte interactive. Il serait aussi bien de rajouter des notifications automatiques qui rappellent aux étudiants de donner les informations de leur échange.</p>
+        <p>Nous aimerions aussi changer les couleurs des marqueurs sur la carte afin qu'ils représentent autre chose que simplement le nombre d'universités dans la région concernée.</p>
+        <p>Enfin, le mieux serait de de mettre notre site sur un vrai serveur et qu’il puisse être utilisé par tout l’INSA et pas seulement  par le département TC.</p>
+    </div>
+{% endblock main %}
+
+{% block scripts %}
+{% endblock scripts %}

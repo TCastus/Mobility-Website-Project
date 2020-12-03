@@ -1,0 +1,72 @@
+{% extends 'exchange/base.html' %}
+{% load static %}
+
+{% block head%}
+<title> Ajout Of </title>
+{% endblock head %}
+
+{% block intro %}
+<div id="intro" style="min-height: 0vh;">
+    <ul class="actions">
+        <li><a class="button icon solo fa-arrow-down scrolly" href="#nav">Continue</a></li>
+    </ul>
+</div>
+{% endblock intro %}
+
+{% block main %}
+<!-- Post -->
+<section class="post">
+    <header class="major">
+        <h1>Ajouter une information officielle</h1>
+    </header>
+    <div class="image main"><img alt="" src="images/pic01.jpg" /></div>
+</section>
+<section>
+    <div class="table-wrapper">
+        <h3>Départements déjà existants:</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Nom</th>
+                    <th>Classement</th>
+                    <th>Modifier</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for d in departs %}
+                <tr>
+                    <td>{{d.Name}}</td>
+                    <td>{{d.Rank}}</td>
+                    <td><a href="/mobility/exchange/modifDep/{{d.ID}}">#</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <hr>
+    <div class="table-wrapper">
+        <h3>Ajouter un département</h3>
+        <form action="{% url 't' Uni.ID %}" method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input type="submit" value="Ajouter">
+        </form>
+    </div>
+    </hr>
+    <hr>
+    <div class="table-wrapper">
+        <h3>Modifier les infos de {{Uni.Name}}</h3>
+        <form action="{% url 't' Uni.ID %}" method="post">
+            {% csrf_token %}
+            {{ formUni.as_p }}
+            <input type="submit" value="Modifier">
+        </form>
+    </div>
+    <div class="table-wrapper">
+        <form action="/mobility/exchange/universite/{{Uni.ID}}" method="get">
+            <input type="submit" value="Retour sur la page de l'université">
+        </form>
+    </div>
+    </hr>
+</section>
+{% endblock main %}

@@ -1,0 +1,40 @@
+{% extends 'exchange/base.html' %}
+{% load static %}
+
+{% block style %}
+{% endblock style %}
+
+{% block head %}
+    <title>Ajouter une info - Bourses</title>
+{% endblock head %}
+
+{% block intro %}
+    <div id="intro" style="min-height: 0vh;">
+        <ul class="actions">
+            <li><a class="button icon solo fa-arrow-down scrolly" href="#nav">Continue</a></li>
+        </ul>
+    </div>
+{% endblock intro %}
+
+{% block main %}
+    <header class="major">
+        <h1>Ajouter<br />
+        une info</h1>
+        <p>Donne ton avis sur ton échange à l'étranger</p>
+    </header>
+
+    <div class="table-wrapper">
+        <header>
+            <h3>Informations financières</h3>
+            <p>Si vous n'avez pas touché de bourses, passez cette section.</p>
+        </header>
+        <form action="{% url 'edit-financial' Uni.ID Exch.ID %}" method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input type="submit" value="Envoyer">
+        </form>
+    </div>
+{% endblock main %}
+
+{% block scripts %}
+{% endblock scripts %}
