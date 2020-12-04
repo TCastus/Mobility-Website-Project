@@ -10,17 +10,17 @@ class StudentForm(forms.ModelForm):
         model = Student
         fields = '__all__'
         labels = {
-            'Name':('Prénom'),
-            'Surname':('Nom de famille'),
-            'INSADepartment':('Département INSA'),
-            'Nationality':('Nationalité')
+            'name':('Prénom'),
+            'surname':('Nom de famille'),
+            'INSA_department':('Département INSA'),
+            'nationality':('Nationalité')
         }
 
 #RajouterInfo2 - Language
 class LangueForm(forms.ModelForm):
     class Meta:
         model = UniversityLanguages
-        exclude = ('University',)
+        exclude = ('university',)
    
 #RajouterInfo2 -  Departement
 class DepForm(forms.Form):
@@ -45,9 +45,9 @@ class DepForm(forms.Form):
 class ExchForm(forms.ModelForm):
     class Meta:
         model = Exchange
-        exclude = ('Student','University','Visa',)
+        exclude = ('student', 'university', 'visa',)
         widgets = {
-            'Comment':forms.Textarea(attrs={'cols': 80, 'rows': 10})
+            'comment':forms.Textarea(attrs={'cols': 80, 'rows': 10})
         }
 
     
@@ -56,25 +56,25 @@ class ExchForm(forms.ModelForm):
 class ExchFormVisa(forms.ModelForm):
     class Meta:
         model = Exchange
-        fields = ('Visa',)
+        fields = ('visa',)
 
 #RajouterInfo4 - Aides Finances
 class FinancialForm(forms.ModelForm):
     class Meta:
         model = FinancialAid
-        exclude = ('Exchange',)
+        exclude = ('exchange',)
         labels = {
-            'Name':("Nom de la bourse"),
-            'Value':("Valeur de la bourse (en €)"),
-            'ReceivedEvery':("S'agit-il d'une valeur mensuelle, hebdomadaire ou journalière ?")
+            'name':("Nom de la bourse"),
+            'amount':("Valeur de la bourse (en €)"),
+            'received_every':("S'agit-il d'une valeur mensuelle, hebdomadaire ou journalière ?")
         }
 
 #-----------------RECHERCHE AVANCEE-------------------
-#Filtre : Continent
-class RAContinentForm(forms.ModelForm):
+#Filtre : continent
+class RAcontinentForm(forms.ModelForm):
     class Meta:
         model = Country
-        fields = ('Continent',)
+        fields = ('continent',)
     
 
 #Filtre : Contract
@@ -87,18 +87,18 @@ class ContractForm(forms.ModelForm):
     ContractType = forms.ChoiceField(choices=CONTRACTS,required=False, label="Type de contrat avec l'INSA")
    
     class Meta:
-        model = UniversityContractsStudent
-        fields = ['ContractType']
+        model = UniversityContractStudent
+        fields = ['contract_type']
        
 
 #Ordonage : 
 class OrdreForm(forms.Form):
     ORDRES = (
         ('','------'),
-        ('RankMetric','Ranking'),
-        ('LifeMetric','Qualité de Vie'),
-        ('CountryName','Pays'),
-        ('CWURRank','Ranking Mondial'),
+        ('rank_metric','Ranking'),
+        ('life_metric','Qualité de Vie'),
+        ('name','Pays'),
+        ('CWUR_rank','Ranking Mondial'),
         ('Demand','Demande')
     )
     Ordre = forms.ChoiceField(choices=ORDRES, widget=forms.Select(attrs={'class':"required"}))
@@ -108,26 +108,26 @@ class OrdreForm(forms.Form):
 class DepartForm(forms.ModelForm):
     class Meta:
         model = Department
-        fields = ('Name','Rank',)
+        fields = ('name', 'rank',)
         labels = {
-            'Name':("Nom du département de l'université dans lequel l'échange a été effectué"),
-            'Rank':('Note du département (/5)')
+            'name':("Nom du département de l'université dans lequel l'échange a été effectué"),
+            'rank':('Note du département (/5)')
         }
 
 #Modifie Infos Université
 class UnivForm(forms.ModelForm):
     class Meta:
         model = University
-        fields = ('Demand',)
+        fields = ('demand',)
         labels = {
-            'Demand':('Nombre de demandes (en moyenne)')
+            'demand':('Nombre de demandes (en moyenne)')
         }
 
 class UnivPlacesForm(forms.ModelForm):
     class Meta:
-        model = UniversityPlaces
-        fields = ('Places',)
+        model = ExchangeOffer
+        fields = ('available_places',)
         labels = {
-            'Places':('Nombre de places')
+            'available_places':('Nombre de places')
         }
 

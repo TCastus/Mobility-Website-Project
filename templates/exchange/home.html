@@ -55,7 +55,7 @@ height: 600px;
 // INITIALISATION
 
 // universités + coordonées + metriques / par continent
-var universiteParContinent = [];
+var universiteParcontinent = [];
 var universiteAS = [];
 var universiteAF = [];
 var universiteAdN = [];
@@ -65,35 +65,35 @@ var universiteOC = [];
 
 // On met les infos dans chaques tableau
 {% for o in Univ_list %}
-{% if o.City.Country.Continent == 'AS' %}
+{% if o.city.country.continent == 'AS' %}
 universiteAS.push(
-["{{o.Name}}",parseFloat("{{o.Lat}}".replace(',','.')),parseFloat("{{o.Long}}".replace(',','.')),"{{o.RankMetric}}","{{o.LifeMetric}}",parseInt("{{o.ID}}")]
+["{{o.Name}}",parseFloat("{{o.Lat}}".replace(',','.')),parseFloat("{{o.Long}}".replace(',','.')),"{{o.rank_metric}}","{{o.life_metric}}",parseInt("{{o.ID}}")]
 )
-{% elif o.City.Country.Continent == 'AF' %}
+{% elif o.city.country.continent == 'AF' %}
 universiteAF.push(
-["{{o.Name}}",parseFloat("{{o.Lat}}".replace(',','.')),parseFloat("{{o.Long}}".replace(',','.')),"{{o.RankMetric}}","{{o.LifeMetric}}",parseInt("{{o.ID}}")]
+["{{o.Name}}",parseFloat("{{o.Lat}}".replace(',','.')),parseFloat("{{o.Long}}".replace(',','.')),"{{o.rank_metric}}","{{o.life_metric}}",parseInt("{{o.ID}}")]
 )
-{% elif o.City.Country.Continent == 'AdN' %}
+{% elif o.city.country.continent == 'AdN' %}
 universiteAdN.push(
-["{{o.Name}}",parseFloat("{{o.Lat}}".replace(',','.')),parseFloat("{{o.Long}}".replace(',','.')),"{{o.RankMetric}}","{{o.LifeMetric}}",parseInt("{{o.ID}}")]
+["{{o.Name}}",parseFloat("{{o.Lat}}".replace(',','.')),parseFloat("{{o.Long}}".replace(',','.')),"{{o.rank_metric}}","{{o.life_metric}}",parseInt("{{o.ID}}")]
 )
-{% elif o.City.Country.Continent == 'AdS' %}
+{% elif o.city.country.continent == 'AdS' %}
 universiteAdS.push(
-["{{o.Name}}",parseFloat("{{o.Lat}}".replace(',','.')),parseFloat("{{o.Long}}".replace(',','.')),"{{o.RankMetric}}","{{o.LifeMetric}}",parseInt("{{o.ID}}")]
+["{{o.Name}}",parseFloat("{{o.Lat}}".replace(',','.')),parseFloat("{{o.Long}}".replace(',','.')),"{{o.rank_metric}}","{{o.life_metric}}",parseInt("{{o.ID}}")]
 )
-{% elif o.City.Country.Continent == 'EU' %}
+{% elif o.city.country.continent == 'EU' %}
 universiteEU.push(
-["{{o.Name}}",parseFloat("{{o.Lat}}".replace(',','.')),parseFloat("{{o.Long}}".replace(',','.')),"{{o.RankMetric}}","{{o.LifeMetric}}",parseInt("{{o.ID}}")]
+["{{o.Name}}",parseFloat("{{o.Lat}}".replace(',','.')),parseFloat("{{o.Long}}".replace(',','.')),"{{o.rank_metric}}","{{o.life_metric}}",parseInt("{{o.ID}}")]
 )
-{% elif o.City.Country.Continent == 'OC' %}
+{% elif o.city.country.continent == 'OC' %}
 universiteOC.push(
-["{{o.Name}}",parseFloat("{{o.Lat}}".replace(',','.')),parseFloat("{{o.Long}}".replace(',','.')),"{{o.RankMetric}}","{{o.LifeMetric}}",parseInt("{{o.ID}}")]
+["{{o.Name}}",parseFloat("{{o.Lat}}".replace(',','.')),parseFloat("{{o.Long}}".replace(',','.')),"{{o.rank_metric}}","{{o.life_metric}}",parseInt("{{o.ID}}")]
 )
 {% endif %}
 {% endfor %}
 
 //on rassemble tout les tableaux dans un seul
-universiteParContinent.push(universiteAS,universiteAF,universiteAdN,universiteAdS,universiteEU,universiteOC)
+universiteParcontinent.push(universiteAS,universiteAF,universiteAdN,universiteAdS,universiteEU,universiteOC)
 
 // LA CARTE
 // initialize the map object, passing it the id of the div where we want the map to go
@@ -110,11 +110,11 @@ var tiles = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 map.addLayer(tiles);
 
 //METTRE LES MARKERS SUR CARTE
-for(var j=0; j<universiteParContinent.length; j++){ 
+for(var j=0; j<universiteParcontinent.length; j++){ 
     var markers=new L.MarkerClusterGroup({ 
         showCoverageOnHover: false,
     }); 
-    universities=universiteParContinent[j]; 
+    universities=universiteParcontinent[j]; 
     for (var i=0; i < universities.length; i++) { 
         var a=universities[i]; 
         var title=a[0]; 

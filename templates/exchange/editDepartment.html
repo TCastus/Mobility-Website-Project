@@ -20,13 +20,13 @@
     <!-- Post -->
     <section class="post">
         <header class="major">
-            <h1>Département {{depart.Name}}</h1>
+            <h1>Département {{depart.name}}</h1>
         </header>
         <div class="image main"><img alt="" src="images/pic01.jpg" /></div>
     </section>
     <section>
         <div class="table-wrapper">
-            <h3>Modifiez un département de {{depart.University.Name}}</h3>
+            <h3>Modifiez un département de {{depart.university.name}}</h3>
             <form action="{% url 't2' depart.ID %}" method="post">
                 {% csrf_token %}
                 {{ form.as_p }}

@@ -34,8 +34,8 @@
         <header><h3>Filtrer les Universitées selon:</h3></header>
         <form action="{% url 'search' %}"  method="post">
             {% csrf_token %}
-            <label class="required" for="id_Continent">Continent&nbsp;:</label>
-            <select id="id_Continent" name="Continent" onchange="myFunction()" required="">
+            <label class="required" for="id_continent">continent&nbsp;:</label>
+            <select id="id_continent" name="continent" onchange="myFunction()" required="">
                 <option selected="" value="">---------</option>
                 <option value="AS">Asie</option>
                 <option value="AF">Afrique</option>
@@ -45,11 +45,11 @@
                 <option value="OC">Oceanie</option>
             </select>
             </br>
-            <label for="id_CountryName">Pays&nbsp;:</label>
-            <select id="testt" name="CountryName">
+            <label for="id_name">Pays&nbsp;:</label>
+            <select id="testt" name="name">
                 <option value="" >---------</option>  
                 {% for c in ttl %}
-                <option id="{{c.ID}}" style="display:none;" value="{{ c.CountryName }}">{{ c.CountryName }}</option>
+                <option id="{{c.ID}}" style="display:none;" value="{{ c.name }}">{{ c.name }}</option>
                 {% endfor %}
             </select>
             </br>
@@ -59,10 +59,10 @@
             <label class="required" for="id_Ordre">Ordre&nbsp;:</label>
             <select id="id_Ordre" name="Ordre" required="">
                 <option selected="" value="">---------</option>
-                <option value="RankMetric">Ranking</option>
-                <option value="LifeMetric">Qualité de Vie</option>
-                <option value="CountryName">Pays</option>
-                <option value="CWURRank">Ranking Mondial</option>
+                <option value="rank_metric">Ranking</option>
+                <option value="life_metric">Qualité de Vie</option>
+                <option value="name">Pays</option>
+                <option value="CWUR_rank">Ranking Mondial</option>
                 <option value="Demand">Demande</option>
             </select>
             </br>
@@ -90,12 +90,12 @@
             <tbody>
                 {% for u in universitiesC %}
                 <tr>
-                    <td><a href=/university/{{u.University.ID}}>{{u.University.Name}}</a></td>
-                    <td>{{u.University.RankMetric}}</td>
-                    <td>{{u.University.LifeMetric}}</td>
-                    <td>{{u.University.City.CityName}}</td>
-                    <td>{{u.University.City.Country.CountryName}}</td>
-                    <td>{{u.University.Demand}}</td>
+                    <td><a href=/university/{{u.university.id}}>{{u.university.name}}</a></td>
+                    <td>{{u.university.rank_metric}}</td>
+                    <td>{{u.university.life_metric}}</td>
+                    <td>{{u.university.city.name}}</td>
+                    <td>{{u.university.city.country.name}}</td>
+                    <td>{{u.university.demand}}</td>
                     <td>{{u.get_ContractType_display}}</td>
                 </tr>
                 {% endfor %}                                        
@@ -109,12 +109,12 @@
 {% block scripts %}
     function myFunction() {
         //on prend le continent saisi par utilisatuer
-        var cont = document.getElementById("id_Continent").value
+        var cont = document.getElementById("id_continent").value
         console.log(cont)
 
         //on commence par cacher tout les pays
         {% for c in ttl %}
-            if(cont == "{{c.Continent}}"){
+            if(cont == "{{c.continent}}"){
                 document.getElementById("{{c.ID}}").setAttribute('style', 'display:block;');
             }else{
                 document.getElementById("{{c.ID}}").setAttribute('style', 'display:none;');

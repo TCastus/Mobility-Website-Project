@@ -79,7 +79,7 @@
         <p>Depuis la page d’accueil, on peut aussi accéder facilement à deux autres onglets : Recherche avancée et Ajouter une info.</p>
         
         <h4>Recherche avancée</h4>
-        <p>	Cette page contient différents champs pouvant être remplis par l’utilisateur, afin de rechercher des universités avec des filtres plus précis (Continent, pays, type de contrat avec l’INSA) ainsi que définir l’ordre dans lequel ils apparaissent (ordonner par pays/Ranking/Qualité de Vie). Lorsque l’on clique sur “Rechercher”, la liste des universités correspondant à ces filtres s’affiche, les queries correspondants se font du côté back-end bien sûr. 
+        <p>	Cette page contient différents champs pouvant être remplis par l’utilisateur, afin de rechercher des universités avec des filtres plus précis (continent, pays, type de contrat avec l’INSA) ainsi que définir l’ordre dans lequel ils apparaissent (ordonner par pays/Ranking/Qualité de Vie). Lorsque l’on clique sur “Rechercher”, la liste des universités correspondant à ces filtres s’affiche, les queries correspondants se font du côté back-end bien sûr.
             </p>
         <p>Depuis cette page, on peut aussi accéder facilement à deux autres onglets : Accueil et Ajouter une info.</p>
         <h4>Ajouter une info</h4>
@@ -95,15 +95,15 @@
     <div>
         <h2>Base de données</h2>
         <ul>
-            <li><b>Country(CountryName</b>, ECTSConversion, Continent)</li>
-            <li><b>City(CityName</b>, <u>CountryName</u>)</li>
+            <li><b>Country(name</b>, ECTSConversion, continent)</li>
+            <li><b>City(CityName</b>, <u>name</u>)</li>
             <li><b>University(ID</b>, Name, <u>City</u>, WebLink, Places, Demand, SplitableYear, Project)</li>
             <li><b>UniversityContracts(ID</b>, ContractType, <u>UniversityID</u>)</li>
             <li><b>UniversityLanguages(ID</b>, Language, LanguageDiploma, LanguageLevel, <u>UniversityID</u>)</li>
             <li><b>Department(ID</b>, Name, <u>UniversityID</u>, Rank)</li>
             <li><b>Student(Email</b>, Name, Surname, AccronymeDepartementINSA, Nationality)</li>
             <li><b>FinancialAid(ID</b>, Name, Value, <u>ExchangeID</u>)</li>
-            <li><b>Exchange(ID</b>, Year(4TC/5TC), StartDate, EndDate, SemesterNumber, Visa, Comment, TimeVisa, Rent, MonthlyExpenses, NightLifeGrade, CulturalLifeGrade, Security, <u>StudentID</u>, <u>UniversityID</u>)</li>
+            <li><b>Exchange(ID</b>, Year(4TC/5TC), start_date, end_date, SemesterNumber, Visa, Comment, TimeVisa, Rent, MonthlyExpenses, NightLifeGrade, CulturalLifeGrade, Security, <u>StudentID</u>, <u>UniversityID</u>)</li>
         </ul>
     </div>
     <div>

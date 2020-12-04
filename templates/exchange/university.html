@@ -78,13 +78,13 @@
             <div class="column2">
                 <center>
                 <h3>Pays : </h3>
-                {{univ.City.Country.CountryName}}
+                {{univ.city.Country.name}}
                 </center>
             </div>
             <div class="column2">
                 <center>
                 <h3>Ville : </h3>
-                {{univ.City.CityName}}
+                {{univ.city.name}}
                 </center>
             </div>
         </div>
@@ -317,20 +317,20 @@
             <div class="column2">
                 <center>
                 <h5>Classement mondial (Shanghai) : </h5>
-                {% if univ.CWURRank == 0 %}
+                {% if univ.CWUR_rank == 0 %}
                 Pas d'information
                 {% else %}
-                {{univ.CWURRank}}
+                {{univ.CWUR_rank}}
                 {% endif %}
                 </center>
             </div>
             <div class="column2">
                 <center>
                 <h5>Note du département (FLM) : </h5>
-                {% if univ.RankMetric == -1 %}
+                {% if univ.rank_metric == -1 %}
                 Pas d'information
                 {% else %}
-                {{univ.RankMetric}}
+                {{univ.rank_metric}}
                 {% endif %}
                 </center>
             </div>
@@ -426,7 +426,7 @@
     <div class="panel">
         {% for e in ex %}
             {% if e.Comment %}
-                <h5>{{e.Student.Name}} {{e.Student.Surname}}, parti le {{e.StartDate}} ({{e.Year}}A {{e.Student.INSADepartement}} S{{e.Semester}})</h5>
+                <h5>{{e.Student.Name}} {{e.Student.Surname}}, parti le {{e.start_date}} ({{e.Year}}A {{e.Student.INSADepartement}} S{{e.Semester}})</h5>
                 <blockquote>{{e.Comment}}</blockquote>
             {% endif %}
         {% endfor %}
