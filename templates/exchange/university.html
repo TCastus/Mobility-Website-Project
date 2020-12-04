@@ -450,9 +450,9 @@
     </script>
 
     <div>
-        <a class ="button" href=/mobility/exchange/edit/{{univ.ID}}>Donner son avis sur cette université</a>
+        <a class ="button" href=/edit/{{univ.ID}}>Donner son avis sur cette université</a>
         {% if perms.exchange.noter_depart %}
-        <a class="button" href=/mobility/exchange/add-department/{{univ.ID}}>Ajouter une info officielle</a>
+        <a class="button" href=/add-department/{{univ.ID}}>Ajouter une info officielle</a>
         {% endif %}
     </div>
 {% endblock main %}

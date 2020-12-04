@@ -2,10 +2,12 @@
 """Django's command-line utility for administrative tasks."""
 import os
 import sys
+
 import dotenv
 
 
 def main():
+    # Load environment variables from .env files
     dotenv.read_dotenv()
 
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'mobility.settings')

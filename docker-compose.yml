@@ -1,0 +1,59 @@
+version: '3.8'
+
+services:
+  nginx:
+    image: nginx:latest
+    container_name: mobility-nginx
+    ports:
+      - "8000:8000"
+    networks:
+      - web
+    depends_on:
+      - app
+    volumes:
+      - ./docker-conf:/etc/nginx/conf.d
+      - staticfiles:/app/staticfiles
+
+  app:
+    build: .
+    container_name: mobility-django
+    environment:
+      - POSTGRES_DB=db
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_HOST=mobility-postgres
+      - POSTGRES_PORT=5432
+    networks:
+      - db
+      - web
+    depends_on:
+      - db
+    expose:
+      - "8000"
+    volumes:
+      - staticfiles:/app/staticfiles
+      - ./:/app
+
+  db:
+    image: postgres:latest
+    container_name: mobility-postgres
+    networks:
+      - db
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_DB=db
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_HOST_AUTH_METHOD=trust
+# Uncomment this to access db /!\ security warning
+#    ports:
+#    - "5432:5432"
+    volumes:
+      - db_mobility:/var/lib/postgresql/data
+
+networks:
+  db: {}
+  web: {}
+
+volumes:
+  staticfiles: {}
+  db_mobility: {}

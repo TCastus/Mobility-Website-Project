@@ -37,7 +37,7 @@
                 <tr>
                     <td>{{d.Name}}</td>
                     <td>{{d.Rank}}</td>
-                    <td><a href="/mobility/exchange/modifDep/{{d.ID}}">#</a></td>
+                    <td><a href="/modifDep/{{d.ID}}">#</a></td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -63,7 +63,7 @@
         </form>
     </div>
     <div class="table-wrapper">
-        <form action="/mobility/exchange/universite/{{Uni.ID}}" method="get">
+        <form action="/universite/{{Uni.ID}}" method="get">
             <input type="submit" value="Retour sur la page de l'université">
         </form>
     </div>
