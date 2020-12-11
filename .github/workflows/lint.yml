@@ -22,4 +22,3 @@ jobs:
           ls
           black --check --diff $MODULE_ROOT
           flake8 $MODULE_ROOT --show-source --statistics --count --ignore=E501,F403,F405
-o
