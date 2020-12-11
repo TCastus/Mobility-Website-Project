@@ -17,6 +17,6 @@ jobs:
       - name: Run all linters
         env:
           MODULE_ROOT: "./exchange ./mobility"
-        run:
+        run: |
           black --check --diff $MODULE_ROOT
           flake8 $MODULE_ROOT --show-source --statistics --count --ignore=E501,F403,F405
