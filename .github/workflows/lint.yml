@@ -16,9 +16,7 @@ jobs:
           pip install flake8 pylint black
       - name: Run all linters
         env:
-          MODULE_ROOT: "./exchange ./moblity"
-        run: |
-          echo $PWD
-          ls
+          MODULE_ROOT: "./exchange ./mobility"
+        run:
           black --check --diff $MODULE_ROOT
           flake8 $MODULE_ROOT --show-source --statistics --count --ignore=E501,F403,F405
