@@ -1,7 +1,16 @@
 from django import forms
 
-from .models import Student, UniversityLanguages, Department, Exchange, FinancialAid, Country, \
-    UniversityContractStudent, University, ExchangeOffer
+from .models import (
+    Student,
+    UniversityLanguages,
+    Department,
+    Exchange,
+    FinancialAid,
+    Country,
+    UniversityContractStudent,
+    University,
+    ExchangeOffer,
+)
 
 
 # ---------------------- AJOUT D'INFO------------------------
