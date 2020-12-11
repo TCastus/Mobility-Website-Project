@@ -6,7 +6,9 @@ from .consts import *
 class Country(models.Model):
     name = models.CharField(max_length=100)
     continent = models.CharField(max_length=30, choices=CONTINENTS)
-    ECTSConversion = models.FloatField(default=0)  # 1 crédit du pays concerné vaut x crédits ECTS
+    ECTSConversion = models.FloatField(
+        default=0
+    )  # 1 crédit du pays concerné vaut x crédits ECTS
 
     def __str__(self):
         return self.name
@@ -14,7 +16,7 @@ class Country(models.Model):
 
 class City(models.Model):
     name = models.CharField(max_length=100)
-    country = models.ForeignKey('Country', on_delete=models.CASCADE)
+    country = models.ForeignKey("Country", on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
@@ -22,12 +24,16 @@ class City(models.Model):
 
 class University(models.Model):
     name = models.CharField(max_length=1000)
-    city = models.ForeignKey('City', on_delete=models.CASCADE)
+    city = models.ForeignKey("City", on_delete=models.CASCADE)
     website = models.URLField(blank=True)
 
     # Utilisation des coordonnées pour afficher les POI sur la carte interactive
-    latitude = models.DecimalField(max_digits=11, decimal_places=6, null=True, blank=True)
-    longitude = models.DecimalField(max_digits=11, decimal_places=6, null=True, blank=True)
+    latitude = models.DecimalField(
+        max_digits=11, decimal_places=6, null=True, blank=True
+    )
+    longitude = models.DecimalField(
+        max_digits=11, decimal_places=6, null=True, blank=True
+    )
 
     rank_metric = models.DecimalField(max_digits=3, decimal_places=2, default=0)
     life_metric = models.DecimalField(max_digits=3, decimal_places=2, default=0)
@@ -53,7 +59,7 @@ class University(models.Model):
 
 
 class ExchangeOffer(models.Model):
-    university = models.ForeignKey('University', on_delete=models.CASCADE)
+    university = models.ForeignKey("University", on_delete=models.CASCADE)
     duration = models.CharField(max_length=200, choices=DURATION)
     available_places = models.IntegerField(default=0)
     exclusive = models.BooleanField(default=False)
@@ -65,7 +71,7 @@ class ExchangeOffer(models.Model):
 # TODO : merge admin and student into one class
 class UniversityContractAdmin(models.Model):
     contract_type = models.CharField(max_length=200, choices=CONTRACTS, default="X")
-    university = models.ForeignKey('University', on_delete=models.CASCADE)
+    university = models.ForeignKey("University", on_delete=models.CASCADE)
 
     def __str__(self):
         return str(self.contract_type) + " at " + self.university.name
@@ -73,30 +79,44 @@ class UniversityContractAdmin(models.Model):
 
 class UniversityContractStudent(models.Model):
     contract_type = models.CharField(max_length=200, choices=CONTRACTS, default="X")
-    university = models.ForeignKey('University', on_delete=models.CASCADE)
+    university = models.ForeignKey("University", on_delete=models.CASCADE)
 
     def __str__(self):
         return str(self.contract_type) + " at " + self.university.name
 
 
 class UniversityLanguages(models.Model):
-    university = models.ForeignKey('University', on_delete=models.CASCADE)
+    university = models.ForeignKey("University", on_delete=models.CASCADE)
     language = models.CharField(max_length=50, default="")
-    diploma_language = models.CharField(max_length=200, null=True, blank=True, )
-    language_level = models.CharField(max_length=10, choices=LEVEL, null=True, blank=True, default="X", )
+    diploma_language = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+    )
+    language_level = models.CharField(
+        max_length=10,
+        choices=LEVEL,
+        null=True,
+        blank=True,
+        default="X",
+    )
 
     def __str__(self):
         return str(self.language) + " for " + self.university.name
 
 
 class Department(models.Model):
-    university = models.ForeignKey('University', on_delete=models.CASCADE)
+    university = models.ForeignKey("University", on_delete=models.CASCADE)
     name = models.CharField(max_length=100, default="")
-    rank = models.IntegerField(default=1,
-                               help_text="Utilisez une valeur entre 1 et 5, 1 étant la plus basse et 5 la plus haute.")
+    rank = models.IntegerField(
+        default=1,
+        help_text="Utilisez une valeur entre 1 et 5, 1 étant la plus basse et 5 la plus haute.",
+    )
 
     class Meta:
-        permissions = (("noter_depart", "Creer et noter un département d'une université"),)
+        permissions = (
+            ("noter_depart", "Creer et noter un département d'une université"),
+        )
 
     def __str__(self):
         return str(self.name) + " at " + self.university.name
@@ -105,29 +125,33 @@ class Department(models.Model):
 class Student(models.Model):
     name = models.CharField(max_length=100)
     surname = models.CharField(max_length=100)
-    email = models.EmailField(default="prenom.nom@insa-lyon.fr",
-                              help_text="Utilisez votre adresse INSA : prenom.nom@insa-lyon.fr")
+    email = models.EmailField(
+        default="prenom.nom@insa-lyon.fr",
+        help_text="Utilisez votre adresse INSA : prenom.nom@insa-lyon.fr",
+    )
 
     INSA_department = models.CharField(max_length=10, choices=DEPARTMENT)
     nationality = models.CharField(max_length=100, null=True, blank=True)
 
     def __str__(self):
-        return "[" + str(self.INSA_department) + "]" +  str(self.email)
+        return "[" + str(self.INSA_department) + "]" + str(self.email)
 
 
 class FinancialAid(models.Model):
     name = models.CharField(max_length=100, null=True, blank=True)
     amount = models.IntegerField(null=True, blank=True, default=0)
-    received_every = models.CharField(max_length=15, null=True, blank=True, choices=RECEIVED_EVERY)
-    exchange = models.ForeignKey('Exchange', on_delete=models.CASCADE)
+    received_every = models.CharField(
+        max_length=15, null=True, blank=True, choices=RECEIVED_EVERY
+    )
+    exchange = models.ForeignKey("Exchange", on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
 
 
 class Exchange(models.Model):
-    university = models.ForeignKey('University', on_delete=models.CASCADE)
-    student = models.ForeignKey('Student', on_delete=models.CASCADE)
+    university = models.ForeignKey("University", on_delete=models.CASCADE)
+    student = models.ForeignKey("Student", on_delete=models.CASCADE)
 
     year = models.IntegerField(default=4, choices=YEAR_CHOICE)
     semester = models.IntegerField(default=1, choices=SEMESTER_CHOICE)
@@ -143,10 +167,15 @@ class Exchange(models.Model):
     rent = models.IntegerField(null=True, blank=True, default=0)
     monthly_expenses = models.IntegerField(null=True, blank=True, default=0)
 
-    night_life_grade = models.IntegerField(null=True, blank=True, default=0, choices=GRADE)
-    cultural_life_grade = models.IntegerField(null=True, blank=True, default=0, choices=GRADE)
-    security_grade = models.IntegerField(null=True, blank=True, default=0, choices=GRADE)
-
+    night_life_grade = models.IntegerField(
+        null=True, blank=True, default=0, choices=GRADE
+    )
+    cultural_life_grade = models.IntegerField(
+        null=True, blank=True, default=0, choices=GRADE
+    )
+    security_grade = models.IntegerField(
+        null=True, blank=True, default=0, choices=GRADE
+    )
 
     def __str__(self):
         return str(self.student) + " at " + self.university.name

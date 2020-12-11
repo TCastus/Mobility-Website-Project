@@ -2,12 +2,15 @@ import datetime
 from collections import defaultdict
 
 from django.contrib.auth import logout
-from django.contrib.auth.decorators import login_required, permission_required, user_passes_test
+from django.contrib.auth.decorators import (
+    login_required,
+    permission_required,
+    user_passes_test,
+)
 from django.contrib.auth.models import Permission
 from django.db.models import Avg, Func
 from django.shortcuts import render, redirect
 
-from .consts import months
 from .forms import *
 from .models import *
 
@@ -17,7 +20,7 @@ def day_month_conversion(day_of_year):
     day = d.strftime("%#d")
     month = d.strftime("%#m")
     return day + " " + months[int(month) - 1]
- 
+
 
 # TODO : optimize this mess
 def visa_duration(day, week, month):
@@ -57,16 +60,16 @@ def duplicates_in_fin(list_to_check):
 
 
 class Round(Func):
-    function = 'ROUND'
-    template = '%(function)s(%(expressions)s, 2)'
+    function = "ROUND"
+    template = "%(function)s(%(expressions)s, 2)"
 
 
 def base(request):
-    return render(request, 'exchange/base.html')
+    return render(request, "exchange/base.html")
 
 
 def user(request):
-    return render(request, 'exchange/user.html')
+    return render(request, "exchange/user.html")
 
 
 # --------------------------------PAGE D'ACCUEIL-----------------------------------
@@ -74,7 +77,7 @@ def user(request):
 # TODO : one function instead of 2 nearly identical
 def actualiser_metrique_1():
     # moyenne des différent Rank pour chaque Department de Chaque Univ
-    metrique_depa = Department.objects.values_list('University').annotate(Avg('Rank'))
+    metrique_depa = Department.objects.values_list("University").annotate(Avg("Rank"))
 
     # insère la valeur dans l'université
     for elem in metrique_depa:
@@ -86,14 +89,14 @@ def actualiser_metrique_1():
 # Actualisation de lifeMetric
 def actualiserMetrique2():
     # moyenne des différent Rank pour chaque Department de Chaque Univ
-    metrique2_Depa = Exchange.objects.values_list('University').annotate(Avg('CulturalLifeGrade'),
-                                                                         Avg('NightLifeGrade'), Avg(
-            'Security'))  # mettre le cout de la vie aussi
+    metrique2_Depa = Exchange.objects.values_list("University").annotate(
+        Avg("CulturalLifeGrade"), Avg("NightLifeGrade"), Avg("Security")
+    )  # mettre le cout de la vie aussi
 
     # insère la valeur dans l'université
     for elem in metrique2_Depa:
         instance = University.objects.get(id=elem[0])
-        instance.life_metric = ((elem[1] + elem[2] + elem[3]) / 3)
+        instance.life_metric = (elem[1] + elem[2] + elem[3]) / 3
         instance.save()
 
 
@@ -105,11 +108,11 @@ def home(request):
     actualiser_metrique_1()
     actualiserMetrique2()
 
-    return render(request, 'exchange/home.html', locals())
+    return render(request, "exchange/home.html", locals())
 
 
 def index(request):
-    return redirect('/home')
+    return redirect("/home")
 
 
 # -----------------------PAGE D'UNE UNIVERSITE (PAR id)-----------------
@@ -117,7 +120,11 @@ def university(request, idUni):
     # Requetes vers BD:
     univ = University.objects.get(pk=idUni)
     cont = UniversityContractStudent.objects.filter(university=univ)
-    langue = UniversityLanguages.objects.filter(university=univ).exclude(language="Inconnu").distinct()
+    langue = (
+        UniversityLanguages.objects.filter(university=univ)
+        .exclude(language="Inconnu")
+        .distinct()
+    )
     ex = Exchange.objects.filter(university=univ)
     pl = ExchangeOffer.objects.filter(university=univ)
     S1 = ex.filter(semester=1)  # renvoie le premier élément de "ex" pour Semestre 1
@@ -126,12 +133,18 @@ def university(request, idUni):
     # S1 will contain 0 or multiple Exchange objects in a QuerySet
     # Check if there is a need for a Visa anywhere
     s1_start, s1_end, s2_start, s2_end = 0, 0, 0, 0
-    s1_start_date, s1_end_date, s2_start_date, s2_end_date = "Pas d'information", "Pas d'information", "Pas d'information", "Pas d'information"
+    s1_start_date, s1_end_date, s2_start_date, s2_end_date = (
+        "Pas d'information",
+        "Pas d'information",
+        "Pas d'information",
+        "Pas d'information",
+    )
     visa = []
     if S1:
         for e in S1:
             s1_start += int(
-                e.start_date.strftime("%j"))  # <-- Gives the day of the year of that specific datetime.date object
+                e.start_date.strftime("%j")
+            )  # <-- Gives the day of the year of that specific datetime.date object
             s1_end += int(e.end_date.strftime("%j"))
             visa.append(e.visa)
 
@@ -183,45 +196,57 @@ def university(request, idUni):
 
     # temp NE DOIS JAMAIS ETRE SAUVEGARDE!!!!!!!!!!!!
     for f in fin_filtered:
-        temp = FinancialAid(name=f["name"], value=f["avg_value"], received_every=f["received_every"],
-                            exchange=Exchange.objects.first())
+        temp = FinancialAid(
+            name=f["name"],
+            value=f["avg_value"],
+            received_every=f["received_every"],
+            exchange=Exchange.objects.first(),
+        )
         fin_list.append(temp)
 
     # la moyenne des différentes notes pour touts les object Exchange d'un Université
-    avg = Exchange.objects.filter(university=univ).aggregate(r=Round(Avg('rent')), m=Round(Avg('monthly_expenses')),
-                                                             n=Avg('night_life_grade'), c=Avg('cultural_life_grade'),
-                                                             s=Avg('security_grade'))  # mettre le cout de la vie aussi
+    avg = Exchange.objects.filter(university=univ).aggregate(
+        r=Round(Avg("rent")),
+        m=Round(Avg("monthly_expenses")),
+        n=Avg("night_life_grade"),
+        c=Avg("cultural_life_grade"),
+        s=Avg("security_grade"),
+    )  # mettre le cout de la vie aussi
 
-    return render(request, 'exchange/university.html', locals())
+    return render(request, "exchange/university.html", locals())
 
 
 # -----------------------PAGE RECHERCHE AVANCEE-----------------
 def search(request):
-    # Initialisation d'un objets Université pour requête 
+    # Initialisation d'un objets Université pour requête
     qs = University.objects.none()
 
-    # Initialisation des forms 
+    # Initialisation des forms
     form = RAcontinentForm(request.POST or None)
     formContract = ContractForm(request.POST or None)
     ordre = OrdreForm(request.POST or None)
 
     # liste de tout les objects Pays
-    ttl = Country.objects.all().order_by('name')
+    ttl = Country.objects.all().order_by("name")
 
     # Verifie que le submit est cohérent
     if form.is_valid() and formContract.is_valid() and ordre.is_valid():
         # prend toutes les valuers
-        continent = form.cleaned_data['continent']
-        name = request.POST.get('name')
-        ContractType = formContract.cleaned_data['contract_type']
-        ordres = ordre.cleaned_data['Ordre']
+        continent = form.cleaned_data["continent"]
+        name = request.POST.get("name")
+        ContractType = formContract.cleaned_data["contract_type"]
+        ordres = ordre.cleaned_data["Ordre"]
 
         # En fonction des options choisies on fait une requete différente
-        universitiesC = UniversityContractAdmin.objects.filter(university__city__country__continent=continent)
+        universitiesC = UniversityContractAdmin.objects.filter(
+            university__city__country__continent=continent
+        )
         # UniversityContractsStudent
         # Si On filtre par pays
         if name != "":
-            universitiesC = universitiesC.filter(university__city__country__country_name=name)
+            universitiesC = universitiesC.filter(
+                university__city__country__country_name=name
+            )
 
         # Si on filtre par contract
         if ContractType != "":
@@ -229,29 +254,33 @@ def search(request):
 
         # Ordre : soit par pays soit par autre
         if ordres == "name":
-            universitiesC = universitiesC.order_by('university__city__country__name',
-                                                   'university__city__name')
+            universitiesC = universitiesC.order_by(
+                "university__city__country__name", "university__city__name"
+            )
         else:
-            universitiesC = universitiesC.order_by('-university__' + ordres, 'university__city__country__name',
-                                                   'university__city__name')
+            universitiesC = universitiesC.order_by(
+                "-university__" + ordres,
+                "university__city__country__name",
+                "university__city__name",
+            )
 
         # dit qu'on peut afficher la liste des Universités
         valide = True
 
-    return render(request, 'exchange/search.html', locals())
+    return render(request, "exchange/search.html", locals())
 
 
 # ---------RAJOUTER INFO--------------------------------
 # selection continent
 def reviewExchange(request):
-    return render(request, 'exchange/reviewExchange.html', locals())
+    return render(request, "exchange/reviewExchange.html", locals())
 
 
 # selection pays
 def countries(request, continent):
     # donne lsite des objects pays selon le continent du paramètre de l'URL
     pays_var = Country.objects.filter(continent=continent)
-    return render(request, 'exchange/countries.html', locals())
+    return render(request, "exchange/countries.html", locals())
 
 
 # selection ville
@@ -262,7 +291,7 @@ def cities(request, country):
     # donne les villes pour ce pays là
     ville = City.objects.filter(country=p)
 
-    return render(request, 'exchange/cities.html', locals())
+    return render(request, "exchange/cities.html", locals())
 
 
 # selection univ
@@ -273,7 +302,7 @@ def universities(request, city):
     # donne toutes les universités de cette ville là
     Uni = University.objects.filter(city=v)
 
-    return render(request, 'exchange/universities.html', locals())
+    return render(request, "exchange/universities.html", locals())
 
 
 # rajouter info étape 1:Student
@@ -292,9 +321,11 @@ def edit(request, univ):
         studentid = student.id
 
         # redirige vers prochaine page
-        return redirect('/edit-department-student/' + str(univid) + '/' + str(studentid))
+        return redirect(
+            "/edit-department-student/" + str(univid) + "/" + str(studentid)
+        )
 
-    return render(request, 'exchange/edit.html', locals())
+    return render(request, "exchange/edit.html", locals())
 
 
 # rajouter info étape 2:Department et UnivLanguage
@@ -314,9 +345,9 @@ def editDepartmentStudent(request, univ, stud):
 
     if form2.is_valid():
         # Prend le resultat du form Departement
-        idDep = request.POST.get('NameDep')
-        note = request.POST.get('Note')
-        if (idDep != ""):
+        idDep = request.POST.get("NameDep")
+        note = request.POST.get("Note")
+        if idDep != "":
             Dep = Department.objects.get(pk=idDep)
             Dep.rank = note
             Dep.save()  # enregistre dans la base de donné
@@ -327,9 +358,9 @@ def editDepartmentStudent(request, univ, stud):
         lang.save()
 
         # redirige vers next form
-        return redirect('/edit-exchange/' + str(univid) + '/' + str(studentid))
+        return redirect("/edit-exchange/" + str(univid) + "/" + str(studentid))
 
-    return render(request, 'exchange/editDepartmentStudent.html', locals())
+    return render(request, "exchange/editDepartmentStudent.html", locals())
 
 
 # rajouter info étape 3:Exchange
@@ -341,10 +372,12 @@ def editExchange(request, univ, stud):
 
     # Formulaire pour Exchange
     form = ExchForm(request.POST or None)
-    formVisa = ExchFormVisa(request.POST or None)  # poue la case à cohcer c'est un cas à part
+    formVisa = ExchFormVisa(
+        request.POST or None
+    )  # poue la case à cohcer c'est un cas à part
 
     if form.is_valid() and formVisa.is_valid():
-        Visa = formVisa.cleaned_data['visa']  # case à cocher
+        Visa = formVisa.cleaned_data["visa"]  # case à cocher
 
         # enregitrer dans la base de donné
         exch = form.save(commit=False)
@@ -357,9 +390,9 @@ def editExchange(request, univ, stud):
         exchid = exch.id
 
         # redirige vers next form
-        return redirect('/edit-financial/' + str(univid) + '/' + str(exchid))
+        return redirect("/edit-financial/" + str(univid) + "/" + str(exchid))
 
-    return render(request, 'exchange/editExchange.html', locals())
+    return render(request, "exchange/editExchange.html", locals())
 
 
 # rajouter info étape 4: Aides Finances
@@ -372,9 +405,9 @@ def editFinancial(request, univ, exch):
     # form pour les Aides Finacières
     form = FinancialForm(request.POST or None)
     if form.is_valid():
-        Name = form.cleaned_data['name']
-        Value = form.cleaned_data['amount']
-        ReceivedEvery = form.cleaned_data['received_every']
+        Name = form.cleaned_data["name"]
+        Value = form.cleaned_data["amount"]
+        ReceivedEvery = form.cleaned_data["received_every"]
 
         # enregistre dans base de donnée
         fin = form.save(commit=False)
@@ -382,45 +415,45 @@ def editFinancial(request, univ, exch):
         fin.save()
 
         # aller vers page d'accueil
-        return redirect('/home')
+        return redirect("/home")
 
-    return render(request, 'exchange/editFinancial.html', locals())
+    return render(request, "exchange/editFinancial.html", locals())
 
 
 # ----------------AUTHENTIFICATION---------
 # Connexion
-@login_required(login_url='/accounts/login/')  # redirige vers CAS
+@login_required(login_url="/accounts/login/")  # redirige vers CAS
 def exchangeLogin(request):
-    print(request.session['attributes'])  # affiche attributs de l'utilisateur
+    print(request.session["attributes"])  # affiche attributs de l'utilisateur
     user = request.user  # prend le user
 
-    # rajoute permission pour noter info officielles 
-    permission = Permission.objects.get(codename='noter_depart')
+    # rajoute permission pour noter info officielles
+    permission = Permission.objects.get(codename="noter_depart")
     user.user_permissions.add(permission)
     # ici faire user.atribuChePa == blabla
 
     # reviesn à la page d'accueil
-    return redirect('/home')
+    return redirect("/home")
 
 
-# Renvoie faux si utilisateur est connecté 
+# Renvoie faux si utilisateur est connecté
 def check(user):
     return not (user.is_authenticated)
 
 
 # DECONEXION ou sinon CAS_IGNORE_REFERER à true
-@user_passes_test(check, login_url='/accounts/logout/')  # redirige vers deconnexion CAS
+@user_passes_test(check, login_url="/accounts/logout/")  # redirige vers deconnexion CAS
 def exchangeLogout(request):
     logout(request)
     # HttpResponse(reverse('cas_ng_logout'))
     # reverse(connexion)
     # redirige vers accueil
-    return redirect('/home')
+    return redirect("/home")
 
 
 # ----------------------PROF : MODIFIE--------------------
 # pour la page d'ajout de département
-@permission_required('exchange.noter_depart')
+@permission_required("exchange.noter_depart")
 def addDepartment(request, univ):
     # Initialisation des forms
     form = DepartForm(request.POST or None)
@@ -434,8 +467,8 @@ def addDepartment(request, univ):
 
     # recupère les données du Form de Départment
     if form.is_valid():
-        Name = form.cleaned_data['name']
-        Rank = form.cleaned_data['rank']
+        Name = form.cleaned_data["name"]
+        Rank = form.cleaned_data["rank"]
 
         # Creer un nouveau département dans BD
         depart = Department(Name=Name, University=Uni, Rank=Rank)
@@ -443,8 +476,8 @@ def addDepartment(request, univ):
 
     # recupere les donnes du form Université
     if formUni.is_valid():
-        Places = formUniPlaces.cleaned_data['available_places']
-        Demand = formUni.cleaned_data['demand']
+        Places = formUniPlaces.cleaned_data["available_places"]
+        Demand = formUni.cleaned_data["demand"]
 
         # modifie les valeurs de l'université
         pl.available_places = Places
@@ -452,11 +485,11 @@ def addDepartment(request, univ):
         Uni.save()
         pl.save()
 
-    return render(request, 'exchange/addDepartment.html', locals())
+    return render(request, "exchange/addDepartment.html", locals())
 
 
 # pour la page de modification d'un département
-@permission_required('exchange.noter_depart')
+@permission_required("exchange.noter_depart")
 def editDepartment(request, dep):
     # recupère le départ de l'URL
     form = DepartForm(request.POST or None)
@@ -464,8 +497,8 @@ def editDepartment(request, dep):
 
     # recupère info du fom de Départment
     if form.is_valid():
-        Name = form.cleaned_data['name']
-        Rank = form.cleaned_data['rank']
+        Name = form.cleaned_data["name"]
+        Rank = form.cleaned_data["rank"]
 
         # modifie les valeurs
         depart.name = Name
@@ -473,15 +506,15 @@ def editDepartment(request, dep):
         depart.save()
 
         # redirige vers la première page d'ajout officiellle
-        return redirect('/add-department/' + str(depart.university.id))
+        return redirect("/add-department/" + str(depart.university.id))
 
-    return render(request, 'exchange/editDepartment.html', locals())
+    return render(request, "exchange/editDepartment.html", locals())
 
 
 def review(request):
-    return render(request, 'exchange/addInformation.html', {})
+    return render(request, "exchange/addInformation.html", {})
 
 
 # --------------Rapport---------------
 def rapport(request):
-    return render(request, 'exchange/rapport.html', {})
+    return render(request, "exchange/rapport.html", {})

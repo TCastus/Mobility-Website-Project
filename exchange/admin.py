@@ -1,8 +1,18 @@
 from django.contrib import admin
 
-from .models import Country, City, University, ExchangeOffer, UniversityContractAdmin, \
-    UniversityContractStudent, UniversityLanguages, Student, \
-    Department, FinancialAid, Exchange
+from .models import (
+    Country,
+    City,
+    University,
+    ExchangeOffer,
+    UniversityContractAdmin,
+    UniversityContractStudent,
+    UniversityLanguages,
+    Student,
+    Department,
+    FinancialAid,
+    Exchange,
+)
 
 admin.site.register(Country)
 admin.site.register(City)
