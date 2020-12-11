@@ -11,12 +11,12 @@ jobs:
         with:
           python-version: 3.9
       - name: Install dependencies
-      - run: |
+        run: |
           pip install -r requirements.txt
           pip install flake8 pylint black
       - name: Run all linters
         env:
           module-root: "exchange moblity"
-        run |
+        run: |
           black --check --diff $module-root
-          flake8 $module-root --show-source --statistics --count --ignore=E501
+          flake8 $module-root --show-source --statistics --count --ignore=E501,F403,F405
