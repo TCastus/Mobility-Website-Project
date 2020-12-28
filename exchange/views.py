@@ -77,7 +77,7 @@ def user(request):
 # TODO : one function instead of 2 nearly identical
 def actualiser_metrique_1():
     # moyenne des différent Rank pour chaque Department de Chaque Univ
-    metrique_depa = Department.objects.values_list("University").annotate(Avg("Rank"))
+    metrique_depa = Department.objects.values_list("university").annotate(Avg("rank"))
 
     # insère la valeur dans l'université
     for elem in metrique_depa:
@@ -89,8 +89,8 @@ def actualiser_metrique_1():
 # Actualisation de lifeMetric
 def actualiserMetrique2():
     # moyenne des différent Rank pour chaque Department de Chaque Univ
-    metrique2_Depa = Exchange.objects.values_list("University").annotate(
-        Avg("CulturalLifeGrade"), Avg("NightLifeGrade"), Avg("Security")
+    metrique2_Depa = Exchange.objects.values_list("university").annotate(
+        Avg("cultural_life_grade"), Avg("night_life_grade"), Avg("security_grade")
     )  # mettre le cout de la vie aussi
 
     # insère la valeur dans l'université
@@ -116,15 +116,16 @@ def index(request):
 
 
 # -----------------------PAGE D'UNE UNIVERSITE (PAR id)-----------------
-def university(request, idUni):
+def university(request, id):
     # Requetes vers BD:
-    univ = University.objects.get(pk=idUni)
+    univ = University.objects.get(pk=id)
     cont = UniversityContractStudent.objects.filter(university=univ)
     langue = (
         UniversityLanguages.objects.filter(university=univ)
         .exclude(language="Inconnu")
         .distinct()
     )
+
     ex = Exchange.objects.filter(university=univ)
     pl = ExchangeOffer.objects.filter(university=univ)
     S1 = ex.filter(semester=1)  # renvoie le premier élément de "ex" pour Semestre 1
@@ -186,19 +187,21 @@ def university(request, idUni):
     else:
         visa_text = "Visa non nécessaire"
 
-    # Pour avoir toutes les FinancialAid d'une échange "ex"
+    # Pour avoir toutes les FinancialAid d'un échange "ex"
     fin = FinancialAid.objects.none()
     for e in ex:
-        fin = fin | FinancialAid.objects.filter(Exchange=e).exclude(Value=-1)
+        fin = fin | FinancialAid.objects.filter(exchange=e).exclude(amount=-1)
 
     fin_list = []
-    fin_filtered = fin.values("name", "received_every").annotate(avg_value=Avg("value"))
+    fin_filtered = fin.values("name", "received_every").annotate(
+        avg_value=Avg("amount")
+    )
 
     # temp NE DOIS JAMAIS ETRE SAUVEGARDE!!!!!!!!!!!!
     for f in fin_filtered:
         temp = FinancialAid(
             name=f["name"],
-            value=f["avg_value"],
+            amount=f["avg_value"],
             received_every=f["received_every"],
             exchange=Exchange.objects.first(),
         )
@@ -218,7 +221,7 @@ def university(request, idUni):
 
 # -----------------------PAGE RECHERCHE AVANCEE-----------------
 def search(request):
-    # Initialisation d'un objets Université pour requête
+    # Initialisation d'un objet Université pour requête
     qs = University.objects.none()
 
     # Initialisation des forms
@@ -231,7 +234,7 @@ def search(request):
 
     # Verifie que le submit est cohérent
     if form.is_valid() and formContract.is_valid() and ordre.is_valid():
-        # prend toutes les valuers
+        # prend toutes les valeurs
         continent = form.cleaned_data["continent"]
         name = request.POST.get("name")
         ContractType = formContract.cleaned_data["contract_type"]
@@ -285,31 +288,28 @@ def countries(request, continent):
 
 # selection ville
 def cities(request, country):
-    # donne l'object pays grace à l'URL
-    p = Country.objects.get(pk=country)
-
-    # donne les villes pour ce pays là
-    ville = City.objects.filter(country=p)
+    # donne les villes pour ce pays donné
+    cities = City.objects.filter(country__id=country)
 
     return render(request, "exchange/cities.html", locals())
 
 
 # selection univ
-def universities(request, city):
+def universities(request, id):
     # Obtien l'objet City grave à l'URL
-    v = City.objects.get(pk=city)
+    city = City.objects.get(pk=id)
 
     # donne toutes les universités de cette ville là
-    Uni = University.objects.filter(city=v)
-
+    univ = University.objects.filter(city=city)
     return render(request, "exchange/universities.html", locals())
 
 
 # rajouter info étape 1:Student
 def edit(request, univ):
     # prend l'object Université par l'URL
-    Uni = University.objects.get(pk=univ)
-    univid = Uni.id
+    uni = University.objects.get(pk=univ)
+
+    # TODO: DETACHER LES CAS GET ET POST POUR QUE CE SOIT CLAIR
 
     # Initialise, verifie et prend les info du formulaire pour Student
     form = StudentForm(request.POST or None)
@@ -317,12 +317,9 @@ def edit(request, univ):
         # enregistre les info données par le Fomrulaire dans DB
         student = form.save()
 
-        # on passera l'id de l'étudiant dans l'URL
-        studentid = student.id
-
-        # redirige vers prochaine page
+        # redirige vers prochaine page : form partie 2
         return redirect(
-            "/edit-department-student/" + str(univid) + "/" + str(studentid)
+            "/edit-department-student/" + str(uni.id) + "/" + str(student.id)
         )
 
     return render(request, "exchange/edit.html", locals())
@@ -330,6 +327,8 @@ def edit(request, univ):
 
 # rajouter info étape 2:Department et UnivLanguage
 def editDepartmentStudent(request, univ, stud):
+    # TODO SEPARER GET ET POST LA C'EST N'IMPORTE QUOI OMG
+
     # Recupère Université et Student du l'URL
     Uni = University.objects.get(pk=univ)
     Stud = Student.objects.get(pk=stud)
@@ -350,7 +349,7 @@ def editDepartmentStudent(request, univ, stud):
         if idDep != "":
             Dep = Department.objects.get(pk=idDep)
             Dep.rank = note
-            Dep.save()  # enregistre dans la base de donné
+            Dep.save()  # enregistre dans la base de données
 
         # enregistre langue dans DB
         lang = form2.save(commit=False)
@@ -365,6 +364,8 @@ def editDepartmentStudent(request, univ, stud):
 
 # rajouter info étape 3:Exchange
 def editExchange(request, univ, stud):
+    # TODO Séparer GET et POST c'est plus drôle là
+
     # recupère info de URL
     Uni = University.objects.get(pk=univ)
     Stud = Student.objects.get(pk=stud)
@@ -397,6 +398,8 @@ def editExchange(request, univ, stud):
 
 # rajouter info étape 4: Aides Finances
 def editFinancial(request, univ, exch):
+    # TODO Séparer GET et POST sinon jpleure
+
     # recupère données de URL
     Uni = University.objects.get(pk=univ)
     Exch = Exchange.objects.get(pk=exch)
@@ -462,8 +465,8 @@ def addDepartment(request, univ):
 
     # Reuperation de l'Universite ensuite des département de l'Université
     Uni = University.objects.get(pk=univ)
-    departs = Department.objects.filter(University=Uni)
-    pl = ExchangeOffer.objects.filter(University=Uni)
+    departs = Department.objects.filter(university=Uni)
+    pl = ExchangeOffer.objects.filter(university=Uni)
 
     # recupère les données du Form de Départment
     if form.is_valid():
@@ -471,11 +474,12 @@ def addDepartment(request, univ):
         Rank = form.cleaned_data["rank"]
 
         # Creer un nouveau département dans BD
-        depart = Department(Name=Name, University=Uni, Rank=Rank)
+        depart = Department(name=Name, university=Uni, rank=Rank)
         depart.save()
 
+    # TODO : ben ça marche pas ce truc
     # recupere les donnes du form Université
-    if formUni.is_valid():
+    if formUni.is_valid() and formUniPlaces.is_valid():
         Places = formUniPlaces.cleaned_data["available_places"]
         Demand = formUni.cleaned_data["demand"]
 

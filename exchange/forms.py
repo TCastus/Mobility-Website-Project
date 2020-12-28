@@ -68,6 +68,7 @@ class ExchForm(forms.ModelForm):
 
 
 # RajouterInfo3 - Exchange (case à cocher)
+# TODO : virer ce form qui ne devrait pas exister..
 class ExchFormVisa(forms.ModelForm):
     class Meta:
         model = Exchange
@@ -116,7 +117,7 @@ class OrdreForm(forms.Form):
         ("life_metric", "Qualité de Vie"),
         ("name", "Pays"),
         ("CWUR_rank", "Ranking Mondial"),
-        ("Demand", "Demande"),
+        ("demand", "Demande"),
     )
     Ordre = forms.ChoiceField(
         choices=ORDRES, widget=forms.Select(attrs={"class": "required"})

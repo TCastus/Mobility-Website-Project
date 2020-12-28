@@ -44,7 +44,7 @@
                 <option value="EU">Europe</option>
                 <option value="OC">Oceanie</option>
             </select>
-            </br>
+            <br />
             <label for="id_name">Pays&nbsp;:</label>
             <select id="testt" name="name">
                 <option value="" >---------</option>  
@@ -52,7 +52,8 @@
                 <option id="{{c.ID}}" style="display:none;" value="{{ c.name }}">{{ c.name }}</option>
                 {% endfor %}
             </select>
-            </br>
+
+            <br />
             {{ formContract.as_p }}
             <hr>
             <h3>Ordonner les Universités selon:</h3>
@@ -63,9 +64,9 @@
                 <option value="life_metric">Qualité de Vie</option>
                 <option value="name">Pays</option>
                 <option value="CWUR_rank">Ranking Mondial</option>
-                <option value="Demand">Demande</option>
+                <option value="demand">Demande</option>
             </select>
-            </br>
+            <br />
             </hr>
             <input id="buton" type="submit" value="Rechercher">
         </form>
@@ -96,7 +97,7 @@
                     <td>{{u.university.city.name}}</td>
                     <td>{{u.university.city.country.name}}</td>
                     <td>{{u.university.demand}}</td>
-                    <td>{{u.get_ContractType_display}}</td>
+                    <td>{{u.get_contract_type_display}}</td>
                 </tr>
                 {% endfor %}                                        
             </tbody>
@@ -115,9 +116,9 @@
         //on commence par cacher tout les pays
         {% for c in ttl %}
             if(cont == "{{c.continent}}"){
-                document.getElementById("{{c.ID}}").setAttribute('style', 'display:block;');
+                document.getElementById("{{c.id}}").setAttribute('style', 'display:block;');
             }else{
-                document.getElementById("{{c.ID}}").setAttribute('style', 'display:none;');
+                document.getElementById("{{c.id}}").setAttribute('style', 'display:none;');
             }
         {% endfor %}
         

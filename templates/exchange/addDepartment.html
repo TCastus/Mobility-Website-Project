@@ -35,9 +35,9 @@
             <tbody>
                 {% for d in departs %}
                 <tr>
-                    <td>{{d.Name}}</td>
-                    <td>{{d.Rank}}</td>
-                    <td><a href="/modifDep/{{d.ID}}">#</a></td>
+                    <td>{{d.name}}</td>
+                    <td>{{d.rank}}</td>
+                    <td><a href="{% url "edit-department" d.id %}">#</a></td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -46,7 +46,7 @@
     <hr>
     <div class="table-wrapper">
         <h3>Ajouter un département</h3>
-        <form action="{% url 't' Uni.ID %}" method="post">
+        <form action="{% url 'add-department' Uni.id %}" method="post">
             {% csrf_token %}
             {{ form.as_p }}
             <input type="submit" value="Ajouter">
@@ -55,15 +55,16 @@
     </hr>
     <hr>
     <div class="table-wrapper">
-        <h3>Modifier les infos de {{Uni.Name}}</h3>
-        <form action="{% url 't' Uni.ID %}" method="post">
+        <h3>Modifier les infos de {{Uni.name}}</h3>
+        <form action="{% url 'add-department' Uni.id %}" method="post">
             {% csrf_token %}
             {{ formUni.as_p }}
             <input type="submit" value="Modifier">
         </form>
     </div>
+    <!-- TODO: lol -->
     <div class="table-wrapper">
-        <form action="/universite/{{Uni.ID}}" method="get">
+        <form action="/university/{{Uni.id}}" method="get">
             <input type="submit" value="Retour sur la page de l'université">
         </form>
     </div>

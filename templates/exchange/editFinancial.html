@@ -28,7 +28,7 @@
             <h3>Informations financières</h3>
             <p>Si vous n'avez pas touché de bourses, passez cette section.</p>
         </header>
-        <form action="{% url 'edit-financial' Uni.ID Exch.ID %}" method="post">
+        <form action="{% url 'edit-financial' Uni.id Exch.id %}" method="post">
             {% csrf_token %}
             {{ form.as_p }}
             <input type="submit" value="Envoyer">

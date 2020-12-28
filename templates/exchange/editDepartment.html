@@ -27,7 +27,7 @@
     <section>
         <div class="table-wrapper">
             <h3>Modifiez un département de {{depart.university.name}}</h3>
-            <form action="{% url 't2' depart.ID %}" method="post">
+            <form action="{% url 'edit-department' depart.id %}" method="post">
                 {% csrf_token %}
                 {{ form.as_p }}
                 <input type="submit" value="Modify">
