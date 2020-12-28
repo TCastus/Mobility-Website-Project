@@ -29,9 +29,9 @@
         </header>
         <table>
             <tbody>
-                {% for u in Uni %}
+                {% for uni in univ %}
                 <tr>
-                    <td><a href=/edit/{{u.ID}}>{{u.Name}}</a></td>
+                    <td><a href=/edit/{{uni.id}}>{{uni.name}}</a></td>
                 </tr> 
                 {% endfor %}                                                                            
             </tbody>

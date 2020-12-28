@@ -7,11 +7,11 @@ urlpatterns = [
     path("add-department/<int:univ>", views.addDepartment, name="add-department"),
     path("edit-department/<int:dep>", views.editDepartment, name="edit-department"),
     path("home", views.home),
-    path("university/<int:idUni>", views.university),
+    path("university/<int:id>", views.university),
     path("review-exchange", views.reviewExchange, name="review-exchange"),
     path("continent/<str:continent>", views.countries, name="countries"),
     path("country/<int:country>", views.cities, name="cities"),
-    path("city/<int:city>", views.universities, name="universities"),
+    path("city/<int:id>", views.universities, name="universities"),
     path("edit/<int:univ>", views.edit, name="edit"),
     path(
         "edit-department-student/<int:univ>/<int:stud>",

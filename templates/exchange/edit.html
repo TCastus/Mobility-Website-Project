@@ -27,7 +27,7 @@
         <header>
             <h3>Informations personnelles</h3>
         </header>
-        <form action="{% url 'edit' Uni.ID %}" method="post">
+        <form action="{% url 'edit' uni.id %}" method="post">
             {% csrf_token %}
             {{ form.as_p }}
             <input type="submit" value="Continuer">

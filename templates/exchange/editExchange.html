@@ -27,17 +27,17 @@
         <header>
             <h3>Informations sur votre échange</h3>
         </header>
-        <form action="{% url 'edit-exchange' Uni.ID Stud.ID %}" method="post">
+        <form action="{% url 'edit-exchange' Uni.id Stud.id %}" method="post">
             {% csrf_token %}
             
             <div class="row">
                 <div class="col-6 col-12-small">
-                    <label for="{{form.Year.id_for_label}}">Promo dans laquelle vous étiez durant votre échange</label>
-                    {{form.Year}}
+                    <label for="{{form.year.id_for_label}}">Promo dans laquelle vous étiez durant votre échange</label>
+                    {{form.year}}
                 </div>
                 <div class="col-6 col-12-small">
-                    <label for="{{form.Semester.id_for_label}}">Semestre de l'échange</label>
-                    {{form.Semester}}
+                    <label for="{{form.semester.id_for_label}}">Semestre de l'échange</label>
+                    {{form.semester}}
                 </div>
             </div>
             <hr>
@@ -56,12 +56,12 @@
             <hr>
             <div class="row">
                 <div class="col-6 col-12-small">
-                    <label for="{{form.Rent.id_for_label}}">Quel était votre loyer ? (en €)</label> 
-                    {{form.Rent}}
+                    <label for="{{form.rent.id_for_label}}">Quel était votre loyer ? (en €)</label>
+                    {{form.rent}}
                 </div>
                 <div class="col-6 col-12-small">
-                    <label for="{{form.MonthlyExpenses.id_for_label}}">Combien dépensiez-vous en moyenne par mois ? (en €)</label>
-                    {{form.MonthlyExpenses}}
+                    <label for="{{form.monthly_expenses.id_for_label}}">Combien dépensiez-vous en moyenne par mois ? (en €)</label>
+                    {{form.monthly_expenses}}
                 </div>
             </div>
             </hr>
@@ -69,16 +69,16 @@
             <div class="row">
                 <h4>Sur une échelle de 1 à 5 (5 étant la note la plus haute), quelle note donneriez-vous à...</h4>
                 <div class="col-4 col-12-small">
-                    <label for="{{form.NightLifeGrade.id_for_label}}"> la vie nocture (soirées, bars, etc) ?</label> 
-                    {{form.NightLifeGrade}}
+                    <label for="{{form.night_life_grade.id_for_label}}"> la vie nocture (soirées, bars, etc) ?</label>
+                    {{form.night_life_grade}}
                 </div>
                 <div class="col-4 col-12-small">
-                    <label for="{{form.MonthlyExpenses.id_for_label}}">la vie culturelle ?</label>
-                    {{form.CulturalLifeGrade}}
+                    <label for="{{form.cultural_life_grade.id_for_label}}">la vie culturelle ?</label>
+                    {{form.cultural_life_grade}}
                 </div>
                 <div class="col-4 col-12-small">
-                    <label for="{{form.MonthlyExpenses.id_for_label}}">la sécurité ?</label>
-                    {{form.Security}}
+                    <label for="{{form.security_grade.id_for_label}}">la sécurité ?</label>
+                    {{form.security_grade}}
                 </div>
             </div>
             </hr>
@@ -86,30 +86,30 @@
             <h4>Visa</h4>
             <i>Si vous n'avez pas eu besoin de visa, cliquez directement sur "Continuer"</i>
             <p>
-                {{formVisa.Visa}}
-                <label for="{{formVisa.Visa.id_for_label}}">Avez-vous eu besoin d'un visa ?</label>
+                {{formVisa.visa}}
+                <label for="{{formVisa.visa.id_for_label}}">Avez-vous eu besoin d'un visa ?</label>
             </p>
             <p>Combien de temps a duré votre procédure de visa ?</p>
             <div class="row">
                 <div class="col-4 col-12-small">
-                    <label for="{{form.VisaMonths.id_for_label}}">Mois</label> 
-                    {{form.VisaMonths}}
+                    <label for="{{form.visa_months.id_for_label}}">Mois</label>
+                    {{form.visa_months}}
                 </div>
                 <div class="col-4 col-12-small">
-                    <label for="{{form.VisaWeeks.id_for_label}}">Semaines</label>
-                    {{form.VisaWeeks}}
+                    <label for="{{form.visa_weeks.id_for_label}}">Semaines</label>
+                    {{form.visa_weeks}}
                 </div>
                 <div class="col-4 col-12-small">
-                    <label for="{{form.VisaDays.id_for_label}}">Jours</label>
-                    {{form.VisaDays}}
+                    <label for="{{form.visa_days.id_for_label}}">Jours</label>
+                    {{form.visa_days}}
                 </div>
             </div>
             </hr>
             <hr>
-                <label for="{{form.Comment.id_for_label}}">Avez-vous un commentaire à faire sur votre échange ?</label>
-                {{form.Comment}}
+                <label for="{{form.comment.id_for_label}}">Avez-vous un commentaire à faire sur votre échange ?</label>
+                {{form.comment}}
             </hr>
-        </br>
+        <br />
             <div>
                 <input type="submit" value="Continuer">
             </div>

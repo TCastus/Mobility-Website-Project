@@ -28,9 +28,9 @@
         </header>
         <table>
             <tbody>
-                {% for v in ville %}
+                {% for city in cities %}
                 <tr>
-                    <td><a href=/city/{{v.ID}}>{{v.CityName}}</a></td>
+                    <td><a href=/city/{{city.id}}>{{city.name}}</a></td>
                 </tr> 
                 {% endfor %}                                                                            
             </tbody>
